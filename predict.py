@@ -1,5 +1,5 @@
 from torchvision import transforms
-from torchvision.utils import Dataloader
+from torch.utils.data import (Dataset, DataLoader)
 import torch
 import os
 
@@ -7,9 +7,17 @@ path = os.environ['MODEL_PATH']
 device = torch.device('cpu')
 model = torch.load(path, map_location=device)
 
+classes = ['Asian Green Bee Eater', ' Brown Headed Barbet', ' Cattle Egret', 
+           ' Common Kingfisher', 'Common Myna', 'Common Rosefinch', 'Common Tailorbird', 
+           'Coppersmith Barbet', 'Forest Wagtail', ' Gray Wagtail','Hoopoe', ' House Crow', 
+           ' Indian Grey Hornbill', ' Indian Peacock', ' Indian Pitta', ' Indian Roller','Jungle Babbler', 
+           ' Northern Lapwing', 'Red-Wattled Lapwing', 'Ruddy Shelduck', 'Rufous Treepie','Sarus Crane', 
+           'White Wagtail', 'White-Breasted Kingfisher', 'White-Breasted Waterhen']  
+
 def predict(testloader: torch.DataLoader):
+    prob = torch.nn.Softmax()
     with torch.no_grad():
-        for (images, labels) in test_loader:
+        for (images, labels) in testloader:
             images = images.to(device)
             labels = labels.to(device)
             outputs = model(images)
@@ -18,24 +26,6 @@ def predict(testloader: torch.DataLoader):
             total += labels.size(0)
             correct += (predicted == labels).sum().item()
 
-
-
-            #print(outputs)
-            #print("shape:", outputs.shape)
             predictedclassval, predictedclassindex = torch.max(prob(outputs), 1)
-            print(f'predicted class probability:{predictedclassval.item()*100}%')
-            #print("max val (probability of class):", predictedclassval)
+            prob = predictedclassval.item()*100
             predictedclass = classes[predictedclassindex.item()]
-            #print("Logits:\n", outputs)
-            #print("Probabilities:\n", probability)
-            print("Predicted Classes:\n", predictedclass)
-            actuallabel = classes[labels.item()]
-            print("Actual Labels:\n", actuallabel)
-            print("----------")
-
-
-        #print("Actual Labels:\n", labels)
-        print("----------")
-    print('Accuracy of the network on the test images: %d %%' % (100 * correct / total))
-
-
