@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, send_file
+from flask import Flask, render_template, request
 from PIL import Image, ImageDraw, ImageFont
 import io
 import base64
@@ -17,6 +17,11 @@ def add_text_to_image(image, text="Sample Text"):
     
     return image
 
+def returntext(text: str): 
+    return "hello"+ text
+
+
+
 @app.route('/', methods=['GET', 'POST'])
 def upload_image():
     if request.method == 'POST':
@@ -28,11 +33,14 @@ def upload_image():
         if file.filename == '':
             return "No selected file", 400
         
+        # Get the additional string from the form
+        display_text = returntext('aaaaaaaaa')
+
         # Open the image file
         image = Image.open(file.stream)
         
         # Add text to the image
-        processed_image = add_text_to_image(image)
+        processed_image = add_text_to_image(image, display_text)
         
         # Save the processed image to a byte stream
         img_io = io.BytesIO()
@@ -42,10 +50,10 @@ def upload_image():
         # Convert image to base64 to embed in HTML
         img_base64 = base64.b64encode(img_io.getvalue()).decode('utf-8')
         
-        # Render the image on the webpage
-        return render_template('test.html', img_data=img_base64)
+        # Render the image and text on the webpage
+        return render_template('final.html', img_data=img_base64, display_text=display_text)
 
-    return render_template('test.html')
+    return render_template('final.html')
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Image and Display with Text</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        input[type="file"], input[type="text"] {
+            margin-bottom: 20px;
+            padding: 10px;
+            font-size: 16px;
+            width: 100%;
+        }
+        input[type="submit"] {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        img {
+            margin-top: 20px;
+            max-width: 100%;
+            height: auto;
+        }
+        .display-text {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Upload Image and Display with Text</h1>
+        <!-- Form to upload image and enter text -->
+        <form method="POST" enctype="multipart/form-data">
+            <input type="file" name="image" accept="image/*" required>
+            <br>
+            <input type="text" name="display_text" placeholder="Enter text to display below the image">
+            <br>
+            <input type="submit" value="Upload and Display">
+        </form>
+
+        <!-- Display the processed image and text if available -->
+        {% if img_data %}
+        <h2>Processed Image:</h2>
+        <img src="data:image/png;base64,{{ img_data }}" alt="Processed Image">
+        {% endif %}
+        
+        {% if display_text %}
+        <div class="display-text">{{ display_text }}</div>
+        {% endif %}
+    </div>
+</body>
+</html>
