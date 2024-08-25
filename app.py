@@ -17,16 +17,17 @@ def returnClass():
             return "Please Upload a File", 400
         
 
-        file = request.files['images']
+        file = request.files['image']
 
         if file.filename == '':
             return 'No selected file'
-    
+        #add prediction logic somewhere down here
         img = Image.open(file.stream)
-        # now need to add prediction and return it
         img_io = io.BytesIO()
-        img = base64.b64encode(img_io.getvalue()).decode('utf-8')
+        img.save(img_io, 'PNG')
         img_io.seek(0)
+        img = base64.b64encode(img_io.getvalue()).decode('utf-8')
+        
 
         txt = "This is a test" #add logic for returning class and probabilities later 
 
