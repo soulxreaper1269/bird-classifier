@@ -28,6 +28,8 @@ def returnClass():
         img = base64.b64encode(img_io.getvalue()).decode('utf-8')
         img_io.seek(0)
 
-        return render_template('final.html',img_data = img) # add html code ree
+        txt = "This is a test" #add logic for returning class and probabilities later 
+
+        return render_template('final.html',img_data = img, display_text = txt) # add html code ree
 
     return render_template('final.html')
