@@ -6,6 +6,9 @@ import os
 from torchvision.models import vit_b_32
 from torch import nn
 from PIL import Image
+import warnings
+
+warnings.filterwarnings("ignore")
 
 
 
@@ -18,6 +21,7 @@ state_dict = torch.load(path, map_location=device)
 model.load_state_dict(state_dict)
 model.to(device)
 
+"""
 def transform_image(test_image_path: str)-> torch.utils.data.DataLoader:
     imgtransform = torchvision.transforms.Compose([
     transforms.Resize((224, 224)),
@@ -29,7 +33,32 @@ def transform_image(test_image_path: str)-> torch.utils.data.DataLoader:
     #test = torchvision.datasets.ImageFolder(root = test_image_path, transform = imgtransform)
     test_loader = DataLoader(image, batch_size=1, shuffle=False)
     return test_loader
+"""
 
+class SingleImageDataset(Dataset):
+    def __init__(self, image_tensor):
+        self.image_tensor = image_tensor
+
+    def __len__(self):
+        return 1  # Only one image
+
+    def __getitem__(self, idx):
+        return self.image_tensor
+
+
+
+
+def transform_image(image: Image.Image) -> torch.utils.data.DataLoader:
+    imgtransform = transforms.Compose([
+        transforms.Resize((224, 224)),
+        transforms.ToTensor(),
+        transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5]),
+    ])
+    
+    image = imgtransform(image)
+    dataset = SingleImageDataset(image)
+    test_loader = DataLoader(dataset, batch_size=1, shuffle=False)
+    return test_loader
 
 classes = ['Asian Green Bee Eater', ' Brown Headed Barbet', ' Cattle Egret', 
            ' Common Kingfisher', 'Common Myna', 'Common Rosefinch', 'Common Tailorbird', 
@@ -44,6 +73,7 @@ classes = ['Asian Green Bee Eater', ' Brown Headed Barbet', ' Cattle Egret',
 
 def predict(testloader: torch.utils.data.DataLoader)-> list: 
     prob = torch.nn.Softmax()
+    model.eval()
     with torch.no_grad():
         for images in testloader:
             #images = images.to(device)
@@ -60,7 +90,7 @@ def predict(testloader: torch.utils.data.DataLoader)-> list:
     
     return [prob,predictedclass]
 
-test = 'test.jpg'
+#test = 'test.jpg'
 
-probability, predict = predict(transform_image(test))
-print(probability, predict)
+#probability, predict = predict(transform_image(test))
+#print(probability, predict)

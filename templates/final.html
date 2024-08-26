@@ -39,7 +39,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Upload Image and Display with Text</h1>
+        <h1>Upload Image</h1>
         <!-- Form to upload image and enter text -->
         <form method="POST" enctype="multipart/form-data">
             <input type="file" name="image" accept="image/*" required>
@@ -55,6 +55,10 @@
         
         {% if display_text %}
         <div class="display-text">{{ display_text }}</div>
+        {% endif %}
+
+        {% if probability %}
+        <div class="display-text">Probability: {{ probability }} %</div>
         {% endif %}
     </div>
 </body>

@@ -1,36 +1,38 @@
-from flask import Flask, request, render_template
+from flask import Flask, render_template, request
 from PIL import Image
 import io
 import base64
-
+from predict import *
 
 app = Flask(__name__)
 
-@app.route('/')
-def hello():
-    return render_template('final.html')
-    
+
+#make a landing page and then a redirect maybe? (for the output)
+
 @app.route('/', methods=['GET', 'POST'])
-def returnClass():
+def upload_image():
     if request.method == 'POST':
         if 'image' not in request.files:
-            return "Please Upload a File", 400
+            return "No file uploaded", 400
         
-
         file = request.files['image']
-
-        if file.filename == '':
-            return 'No selected file'
-        #add prediction logic somewhere down here
-        img = Image.open(file.stream)
-        img_io = io.BytesIO()
-        img.save(img_io, 'PNG')
-        img_io.seek(0)
-        img = base64.b64encode(img_io.getvalue()).decode('utf-8')
         
+        if file.filename == '':
+            return "No selected file", 400
+        
+        image = Image.open(file.stream)
+        processed_image = image
+        img_io = io.BytesIO()
+        processed_image.save(img_io, 'PNG')
+        img_io.seek(0)
+        
+        # Convert image to base64 to embed in HTML
+        img_base64 = base64.b64encode(img_io.getvalue()).decode('utf-8')
+        display_text_list = predict(transform_image(image))
 
-        txt = "This is a test" #add logic for returning class and probabilities later 
-
-        return render_template('final.html',img_data = img, display_text = txt) # add html code ree
+        return render_template('final.html', img_data=img_base64, display_text=display_text_list[1], probability = "{:.3f}".format(display_text_list[0]))
 
     return render_template('final.html')
+
+if __name__ == '__main__':
+    app.run(debug=True)
