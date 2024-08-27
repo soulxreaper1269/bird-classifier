@@ -10,6 +10,11 @@ app = Flask(__name__)
 
 #make a landing page and then a redirect maybe? (for the output)
 
+@app.route('/')
+def website():
+    return render_template('final.html')
+
+
 @app.route('/', methods=['GET', 'POST'])
 def upload_image():
     if request.method == 'POST':
