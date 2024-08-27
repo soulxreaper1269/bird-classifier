@@ -12,7 +12,7 @@ warnings.filterwarnings("ignore")
 
 
 
-path = os.environ['MODEL_PATH']
+path = os.getenv('MODEL_PATH')
 device = torch.device('cpu')
 #model = torch.load(path, map_location=device)
 model = vit_b_32(weights='DEFAULT')
