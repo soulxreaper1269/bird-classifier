@@ -1,2 +1,6 @@
-pytorch
-flask
+Flask==3.0.3
+Pillow==10.4.0
+protobuf==3.20.3
+torch==2.3.0
+torchvision==0.18.1a0
+
