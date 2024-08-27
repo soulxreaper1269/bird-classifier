@@ -2,6 +2,7 @@ from flask import Flask, render_template, request
 from PIL import Image
 import io
 import base64
+import os
 from predict import *
 
 app = Flask(__name__)
@@ -35,4 +36,4 @@ def upload_image():
     return render_template('final.html')
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host= "0.0.0.0", port=int(os.environ.get("PORT",8080)))
