@@ -12,7 +12,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def website():
-    return render_template('final.html')
+    return render_template('index.html')
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -36,9 +36,9 @@ def upload_image():
         img_base64 = base64.b64encode(img_io.getvalue()).decode('utf-8')
         display_text_list = predict(transform_image(image))
 
-        return render_template('final.html', img_data=img_base64, display_text=display_text_list[1], probability = "{:.3f}".format(display_text_list[0]))
+        return render_template('index.html', img_data=img_base64, display_text=display_text_list[1], probability = "{:.3f}".format(display_text_list[0]))
 
-    return render_template('final.html')
+    return render_template('index.html')
 
 if __name__ == '__main__':
     app.run(debug=True, host= "0.0.0.0", port=int(os.environ.get("PORT",8080)))
