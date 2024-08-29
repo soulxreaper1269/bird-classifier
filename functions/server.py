@@ -1,5 +1,5 @@
 from flask_serverless import FlaskServerless
-from main import app
+from app import app
 
 serverless_app = FlaskServerless(app)
 
